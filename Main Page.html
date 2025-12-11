@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PrakritiCare - Ayurvedic Drug Recommendation System</title>
+  
+  <!-- SEO Meta -->
+  <meta name="description" content="PrakritiCare - An Ayurvedic Drug Recommendation System providing herbal remedies and lifestyle guidance based on ancient Ayurveda and modern technology.">
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <script>
+    // Disable back/forward navigation + right-click
+    (function() {
+      window.history.pushState(null, null, window.location.href);
+      window.onpopstate = function() {
+        window.history.pushState(null, null, window.location.href);
+      };
+      document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+      });
+    })();
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5fff8, #dceee0);
+      color: #222;
+      text-align: center;
+      overflow-x: hidden;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    header {
+      background: linear-gradient(90deg,#155724, #28a745);
+      padding: 25px 15px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      animation: slideDown 1s ease;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    header img {
+      height: 80px;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+
+    header img:hover { transform: scale(1.1) rotate(5deg); }
+
+    header h1 {
+      font-size: clamp(2rem, 6vw, 4.5rem);
+      background: linear-gradient(45deg, #77eb7d, #eb9090);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: glow 3s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #fff; }
+      to { text-shadow: 0 0 20px #28a745; }
+    }
+
+    main.container {
+      max-width: 950px;
+      margin: 50px auto;
+      padding: 30px;
+      background: linear-gradient(135deg, #ffffff, #eefaf2);
+      border-radius: 20px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+      animation: zoomIn 1.5s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .banner {
+      overflow: hidden;
+      border-radius: 15px;
+      position: relative;
+    }
+
+    .banner img {
+      width: 100%;
+      transition: transform 1s ease;
+    }
+
+    .banner img:hover { transform: scale(1.08) rotate(-1deg); }
+
+    h2, #typewriter {
+      margin-top: 25px;
+      font-size: 30px;
+      color: #2e7d32;
+      animation: floatText 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatText {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-5px); }
+    }
+
+    p {
+      margin: 15px 0;
+      font-size: 17px;
+      line-height: 1.7;
+      color: #333;
+      transition: all 0.3s ease;
+    }
+
+    p:hover { color: #1b5e20; transform: scale(1.01); }
+
+    strong { color: #27ae60; }
+
+    .button {
+      display: inline-block;
+      margin: 20px 10px;
+      padding: 14px 30px;
+      font-size: 17px;
+      font-weight: bold;
+      background: linear-gradient(to right,#43a047, #155724);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 18px rgba(67, 160, 71, 0.4);
+      animation: bounce 2.5s infinite;
+    }
+
+    .button:hover {
+      background: linear-gradient(to right, #27ae60, #2ecc71);
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(39,174,96,0.5);
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* Flip Card Section */
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 30px;
+      gap: 15px;
+    }
+
+    .flip-card {
+      background-color: transparent;
+      width: 220px;
+      height: 150px;
+      perspective: 1000px;
+      transition: transform 0.3s ease;
+    }
+
+    .flip-card:hover { transform: scale(1.05); }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+    }
+
+    .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 16px;
+      padding: 10px;
+      color: white;
+    }
+
+    .flip-card-front { background: #43a047; }
+
+    .flip-card-back {
+      background: #2e7d32;
+      transform: rotateY(180deg);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -2;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding: 20px;
+      background: #155724;
+      color: white;
+      border-radius: 0 0 20px 20px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      main.container { margin: 30px 15px; padding: 20px; }
+      header h1 { font-size: 28px; }
+      .button { padding: 12px 22px; font-size: 15px; }
+      .card-container { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="particles-js"></div>
+
+<header>
+  <img src="Ayurveda Logo.jpg" alt="Ayurveda Healing Logo">
+  <h1>PrakritiCare</h1>
+</header>
+
+<main class="container">
+  <div class="banner">
+    <img src="banner.jpg" alt="Ayurveda natural healing banner">
+  </div>
+
+  <h2 id="typewriter"></h2>
+
+  <p>Discover the wisdom of <strong>Ayurveda</strong> with our intelligent recommendation system. Based on classical Ayurvedic texts, we suggest <strong>herbal drugs</strong> and <strong>formulations</strong> for various health conditions.</p>
+  <p>Our system combines traditional knowledge with <strong>modern technology</strong> to provide accurate, reliable, and user-friendly suggestions.</p>
+  <p>Explore remedies for <strong>primary health issues</strong>, enhance your lifestyle with natural care, and make informed choices with confidence.</p>
+  <p>Your journey to <strong>holistic well-being</strong> starts here.</p>
+
+  <a href="Login Page.html" class="button">Get Started</a>
+
+  <!-- Ayurvedic Drug Flip Cards -->
+  <div class="card-container">
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">🌿 Tulsi</div>
+        <div class="flip-card-back">Boosts immunity, relieves stress, and supports respiratory health.</div>
+      </div>
+    </div>
+
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">🌱 Ashwagandha</div>
+        <div class="flip-card-back">Enhances energy, reduces anxiety, and improves overall vitality.</div>
+      </div>
+    </div>
+
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">🍃 Triphala</div>
+        <div class="flip-card-back">Promotes digestion, detoxifies the body, and strengthens immunity.</div>
+      </div>
+    </div>
+
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">🌳 Neem</div>
+        <div class="flip-card-back">Purifies blood, supports skin health, and acts as a natural detoxifier.</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  © 2025 PrakritiCare | Developed with 🌿 Ayurveda & 💻 Technology
+</footer>
+
+<!-- Typewriter Effect -->
+<script>
+  const textLines = [
+    "Welcome to PrakritiCare",
+    "An Ayurvedic Drug Recommendation System"
+  ];
+  
+  let lineIndex = 0;
+  let charIndex = 0;
+
+  function typeWriter() {
+    if (lineIndex < textLines.length) {
+      if (charIndex < textLines[lineIndex].length) {
+        document.getElementById("typewriter").innerHTML += textLines[lineIndex].charAt(charIndex);
+        charIndex++;
+        setTimeout(typeWriter, 80);
+      } else {
+        document.getElementById("typewriter").innerHTML += "<br>";
+        lineIndex++;
+        charIndex = 0;
+        setTimeout(typeWriter, 300);
+      }
+    } else {
+      // Restart after finishing
+      lineIndex = 0;
+      charIndex = 0;
+      document.getElementById("typewriter").innerHTML = "";
+      setTimeout(typeWriter, 1000);
+    }
+  }
+  typeWriter();
+</script>
+
+<!-- Particles.js -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+  particlesJS("particles-js", {
+    "particles": {
+      "number": { "value": 60 },
+      "size": { "value": 3 },
+      "move": { "speed": 2 },
+      "line_linked": { "enable": true },
+      "color": { "value": "#27ae60" }
+    }
+  });
+</script>
+
+</body>
+</html>

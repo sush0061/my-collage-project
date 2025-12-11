@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Feedback | PrakritiCare</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+(function() {
+  // Disable back button
+  window.history.pushState(null, null, window.location.href);
+  window.onpopstate = function() { window.history.pushState(null, null, window.location.href); };
+
+  // Disable refresh
+  window.addEventListener('keydown', function(event) {
+    if ((event.key === 'F5') || (event.ctrlKey && event.key === 'r')) {
+      event.preventDefault();
+      alert('Refreshing the page is disabled during this session.');
+    }
+  });
+
+  // Disable right-click menu
+  document.addEventListener('contextmenu', function(event) { event.preventDefault(); });
+})();
+</script>
+
+<style>
+  
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  background: url('back.jpg') no-repeat center center fixed;
+  background-size: cover;
+  background-attachment: fixed;
+  color: rgb(16, 15, 15);
+}
+
+/* Header */
+.header {
+  background: linear-gradient(90deg,#2e7d32, #43a047);
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+}
+.header img { height: 40px; margin-right: 15px; }
+.header h1 { font-size: 28px; margin: 0; }
+
+main {
+  text-align: center;
+  padding: 40px 20px 80px;
+}
+
+/* Feedback Section */
+.feedback-section, .history-section {
+  background-color: #f1f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 700px;
+  margin: 30px auto;
+  opacity: 0.95;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+label { color: black; font-size: 1rem; display: block; }
+input[type="text"], select {
+  width: 94%;
+  padding: 10px;
+  margin-top: 5px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.button-group {
+  margin-top: 20px;
+}
+
+button, .back-btn {
+  background: linear-gradient(90deg, #2e7d32,#43a047);
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin: 5px;
+  text-decoration: none;
+}
+
+button:hover, .back-btn:hover { background: linear-gradient(to right, #27ae60,#40b583); }
+
+.message { margin-top: 15px; font-weight: bold; }
+.title { margin-bottom: 20px; color: #2e7d32; }
+
+.popup {
+  display: none;
+  background-color: #dff0d8;
+  color: #ea1b1b;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  font-size: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  animation: fadeInOut 3s forwards;
+}
+
+@keyframes fadeInOut {
+  0%   { opacity: 0; transform: translateY(10px); }
+  10%  { opacity: 1; transform: translateY(0); }
+  90%  { opacity: 1; }
+  100% { opacity: 0; display: none; }
+}
+
+/* Card container for history */
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  width: 250px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.card h3 { margin: 0; color: #30ef3a; }
+.card p { margin: 5px 0; }
+.card small { display: block; margin-top: 5px; color: #555; }
+
+/* Chart */
+#ratingChart { max-width: 500px; margin: 20px auto; }
+
+/* Footer */
+footer {
+  color: black;
+  padding: 20px;
+  text-align: center;
+  margin-top: 50px;
+  font-size: 0.8rem;
+}
+
+.social-icons img {
+  width: 20px;
+  margin: 0 5px;
+  transition: 0.3s ease;
+}
+.social-icons img:hover { transform: scale(1.2); }
+</style>
+</head>
+
+<body>
+
+<!-- Header -->
+<div class="header">
+  <img src="Ayurveda Logo.jpg" alt="PrakritiCare Logo">
+  <h1>PrakritiCare</h1>
+</div>
+
+<main>
+  <h1 class="title">Submit Your Feedback</h1>
+
+  <div class="feedback-section">
+    <canvas id="ratingChart" height="250"></canvas>
+
+    <h2>Provide Your Feedback</h2>
+    <div class="form-group">
+      <label for="recommendation_name">Recommended Treatment</label>
+      <input type="text" id="recommendation_name" name="recommendation_name" list="recommendations" required>
+      <datalist id="recommendations"></datalist>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating:</label>
+      <select id="rating" name="rating" required>
+        <option value="">-- Select Rating --</option>
+        <option value="1">1 - Poor</option>
+        <option value="2">2 - Fair</option>
+        <option value="3">3 - Good</option>
+        <option value="4">4 - Very Good</option>
+        <option value="5">5 - Excellent</option>
+      </select>
+      <small>Note: 1 = Poor, 5 = Excellent</small>
+    </div>
+
+    <div class="button-group">
+      <button onclick="sendFeedback()">Submit Feedback</button>
+      <a href="main1.php" class="back-btn">Back to Home</a>
+    </div>
+
+    <div id="message" class="message"></div>
+    <div id="popup" class="popup">✅ Thank you for your feedback!</div>
+  </div>
+
+  <!-- Recommendation History -->
+  <div class="history-section">
+    <h2>Your Recommendations History</h2>
+    <div id="historyContainer" class="card-container"></div>
+  </div>
+</main>
+
+<script>
+let ratingChart;
+let chartData = {};
+let allHistory = [];
+
+window.addEventListener('DOMContentLoaded', () => {
+  // Load recommendations
+  fetch('load_recommendations.php')
+    .then(res => res.json())
+    .then(data => {
+      const datalist = document.getElementById('recommendations');
+      data.forEach(name => { const option = document.createElement('option'); option.value = name; datalist.appendChild(option); });
+    });
+
+  loadChartData();
+  loadHistory();
+});
+
+function loadChartData() {
+  fetch('get_feedback_summary.php')
+    .then(res => res.json())
+    .then(data => {
+      chartData = {};
+      const labels = [], ratings = [];
+      data.forEach(d => {
+        labels.push(d.recommendation_name);
+        ratings.push(parseFloat(d.avg_rating));
+        chartData[d.recommendation_name] = { sum: d.avg_rating * d.count, count: d.count };
+      });
+
+      const ctx = document.getElementById('ratingChart').getContext('2d');
+      if (ratingChart) ratingChart.destroy();
+      ratingChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Average Rating',
+            data: ratings,
+            backgroundColor: '#43a047',
+            borderColor: '#155724',
+            borderWidth: 1,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false }, title: { display: true, text: 'Average Ratings (1-5)' } },
+          scales: { y: { beginAtZero: true, max: 5 } }
+        }
+      });
+    });
+}
+
+function loadHistory() {
+  fetch('get_feedback_history.php')
+    .then(res => res.json())
+    .then(data => {
+      allHistory = data;
+      renderHistory();
+    });
+}
+
+function renderHistory() {
+  const container = document.getElementById('historyContainer');
+  container.innerHTML = '';
+  allHistory.forEach(e => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <h3>${e.recommendation_name}</h3>
+      <p>Rating: <strong>${e.rating}</strong></p>
+      <small>${new Date(e.created_at).toLocaleString()}</small>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function sendFeedback() {
+  const recommendationName = document.getElementById('recommendation_name').value.trim();
+  const rating = parseInt(document.getElementById('rating').value);
+  const popup = document.getElementById('popup');
+
+  if (!recommendationName || isNaN(rating) || rating < 1 || rating > 5) {
+    alert('❗ Please provide a valid recommendation name and rating (1–5).');
+    return;
+  }
+
+  fetch('save_feedback.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ recommendation_name: recommendationName, rating: rating })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      popup.style.display = 'block';
+      setTimeout(() => { popup.style.display = 'none'; }, 3000);
+
+      document.getElementById('recommendation_name').value = '';
+      document.getElementById('rating').value = '';
+
+      // Update chart
+      if (!chartData[recommendationName]) {
+        chartData[recommendationName] = { sum: rating, count: 1 };
+        ratingChart.data.labels.push(recommendationName);
+        ratingChart.data.datasets[0].data.push(rating);
+      } else {
+        chartData[recommendationName].sum += rating;
+        chartData[recommendationName].count += 1;
+        const avg = chartData[recommendationName].sum / chartData[recommendationName].count;
+        const index = ratingChart.data.labels.indexOf(recommendationName);
+        ratingChart.data.datasets[0].data[index] = parseFloat(avg.toFixed(2));
+      }
+      ratingChart.update();
+
+      // Update history
+      allHistory.unshift({ recommendation_name: recommendationName, rating: rating, created_at: new Date().toISOString() });
+      renderHistory();
+    } else {
+      alert("❌ Failed to submit feedback. Please try again.");
+    }
+  })
+  .catch(err => { console.error(err); alert("⚠️ Network error. Please try again later."); });
+}
+</script>
+
+<footer>
+  <p>Contact us on:</p>
+  <div class="social-icons">
+    <a href="https://www.instagram.com/"><img src="https://cdn-icons-png.flaticon.com/512/211

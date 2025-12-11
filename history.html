@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PrakritiCare - Recommendation History</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('back.jpg') no-repeat center center/cover;
+      color: #222;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: linear-gradient(90deg,#155724,#28a745);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 20px 30px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+
+    header img {
+      height: 60px;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+    header img:hover { transform: scale(1.1) rotate(5deg); }
+
+    header h2 {
+      font-size: 2rem;
+      margin: 0;
+      background: linear-gradient(45deg, #77eb7d, #eb9090);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    main {
+      padding: 30px;
+      max-width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2e7d32;
+      margin-bottom: 20px;
+      font-size: 32px;
+      animation: floatText 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatText {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-5px); }
+    }
+
+    .type-selection {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin: 30px 0;
+    }
+
+    .type-btn {
+      background: linear-gradient(to right, #43a047, #155724);
+      color: #fff;
+      padding: 18px 28px;
+      border: none;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(67,160,71,0.4);
+      transition: all 0.3s ease;
+    }
+
+    .type-btn:hover {
+      background: linear-gradient(to right, #27ae60, #2ecc71);
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(39,174,96,0.5);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin: 20px auto;
+      background: linear-gradient(to right,#155724,#43a047);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-weight: bold;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .back-link:hover {
+      background: linear-gradient(to right, #27ae60, #2ecc71);
+    }
+
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .card {
+      background: rgba(249,255,249,0.9);
+      border-radius: 15px;
+      padding: 20px;
+      width: 280px;
+      box-shadow: 0 6px 20px rgba(46,125,50,0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeSlideUp 0.6s ease forwards;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 25px rgba(39,174,96,0.3);
+    }
+
+    .card h3, .card h4 {
+      margin: 5px 0;
+      color: #155724;
+    }
+
+    .card p, .card small {
+      margin: 8px 0;
+      color: #333;
+    }
+
+    @keyframes fadeSlideUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    footer {
+      color: black;
+      padding: 20px;
+      text-align: center;
+      margin-top: 50px;
+      font-size: 0.9rem;
+    }
+
+    .social-icons img {
+      width: 24px;
+      margin: 0 6px;
+      transition: transform 0.3s ease;
+    }
+    .social-icons img:hover { transform: scale(1.2); }
+
+    #recommendationChart {
+      max-width: 500px;
+      margin: 0 auto 30px;
+      background: rgba(255,255,255,0.8);
+      padding: 15px;
+      border-radius: 15px;
+    }
+
+    @media(max-width:768px){
+      .type-btn { width: 100%; font-size: 16px; }
+      .card { width: 90%; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Ayurveda Logo.jpg" alt="PrakritiCare Logo">
+  <h2>PrakritiCare</h2>
+</header>
+
+<main>
+  <h2>Your Ayurvedic Recommendations</h2>
+
+  <canvas id="recommendationChart" width="400" height="400"></canvas>
+
+  <div id="main-container">
+    <div id="type-selection" class="type-selection"></div>
+  </div>
+
+  <a class="back-link" href="Main Page.html">← Back to Home</a>
+</main>
+
+<footer>
+  <p>Connect with us:</p>
+  <div class="social-icons">
+    <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram"></a>
+    <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter"></a>
+    <a href="#"><img src="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></a>
+    <a href="#"><img src="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
+  </div>
+  <p>&copy; 2025 PrakritiCare | 🌿 Ayurveda & 💻 Technology</p>
+</footer>
+
+<script>
+const typeIcons = { "herbal": "🌿", "formulation": "🍃", "diet": "🥗", "lifestyle": "🧘" };
+let allData = {};
+
+fetch("get_history.php")
+  .then(res => res.json())
+  .then(data => {
+    if (!data.success || !data.history) {
+      document.getElementById("main-container").innerHTML = `<p style="color:red;">Failed to load history.</p>`;
+      return;
+    }
+    const historyData = data.history;
+    const typeCounts = {};
+
+    historyData.forEach(entry => {
+      const type = entry.type.toLowerCase();
+      if (!allData[type]) allData[type] = [];
+      allData[type].push(entry);
+      typeCounts[type] = (typeCounts[type] || 0) + 1;
+    });
+
+    const typeSelection = document.getElementById("type-selection");
+    Object.keys(allData).forEach(type => {
+      const btn = document.createElement("button");
+      btn.className = "type-btn";
+      btn.innerHTML = `${typeIcons[type] || "📦"} ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+      btn.addEventListener("click", () => showTypeRecommendations(type));
+      typeSelection.appendChild(btn);
+    });
+
+    renderChart(typeCounts);
+  })
+  .catch(err => {
+    console.error(err);
+    document.getElementById("main-container").innerHTML = "<p style='color:red;'>Failed to load data.</p>";
+  });
+
+function showTypeRecommendations(type) {
+  const container = document.getElementById("main-container");
+  const entries = allData[type];
+  if (!entries || entries.length === 0) {
+    container.innerHTML = `<p>No records found for ${type}</p>`;
+    return;
+  }
+  container.innerHTML = `
+    <a class="back-link" href="#" onclick="window.location.reload()">← Choose Another Type</a>
+    <h2>${typeIcons[type] || "📦"} ${type.charAt(0).toUpperCase() + type.slice(1)} Recommendations</h2>
+    <div class="card-container" id="cardContainer"></div>
+  `;
+  const cardContainer = document.getElementById("cardContainer");
+  entries.forEach((e,index) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.animationDelay = `${index*0.1}s`;
+    card.innerHTML = `
+      <h3>Symptoms</h3><p>${e.symptoms}</p>
+      <h4>Disease</h4><p>${e.disease}</p>
+      <h4>Recommendation</h4><p><strong>${e.recommendation}</strong></p>
+      <small>Age: ${e.age} | ${new Date(e.created_at).toLocaleString()}</small>
+    `;
+    cardContainer.appendChild(card);
+  });
+}
+
+function renderChart(typeCounts){
+  const ctx = document.getElementById('recommendationChart').getContext('2d');
+  new Chart(ctx,{
+    type:'pie',
+    data:{
+      labels: Object.keys(typeCounts).map(t=>t.charAt(0).toUpperCase()+t.slice(1)),
+      datasets:[{
+        label:'Recommendation Type Distribution',
+        data: Object.values(typeCounts),
+        backgroundColor:['#43a047','#77eb7d','#ffb347','#ffa07a'],
+        borderColor:'#fff',
+        borderWidth:2
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{
+        legend:{position:'bottom'},
+        title:{display:true,text:'Distribution of Ayurvedic Recommendation Types'}
+      }
+    }
+  });
+}
+</script>
+
+</body>
+</html>

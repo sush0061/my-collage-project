@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | PrakritiCare</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5fff8, #dceee0);
+      color: #222;
+      overflow-x: hidden;
+      animation: fadeIn 1s ease-in-out;
+      position: relative;
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-container {
+      max-width: 400px;
+      background: linear-gradient(135deg, #ffffff, #eefaf2);
+      margin: 80px auto;
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+      text-align: center;
+      animation: zoomIn 1.5s ease;
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .login-container img {
+      width: 90px;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      animation: bounceIn 1.5s ease-in-out;
+    }
+
+    @keyframes bounceIn {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    h2#typewriter {
+      font-size: 24px;
+      margin: 15px 0;
+      color: #2e7d32;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #fff; }
+      to { text-shadow: 0 0 15px #43a047; }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    input {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #27ae60;
+      box-shadow: 0 0 10px rgba(39, 174, 96, 0.2);
+    }
+
+    button {
+      padding: 12px;
+      font-size: 16px;
+      background: linear-gradient(to right, #43a047, #155724);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: bold;
+      animation: bounce 2.5s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #27ae60, #2ecc71);
+      box-shadow: 0 8px 25px rgba(39,174,96,0.5);
+      transform: scale(1.05);
+    }
+
+    .register-link {
+      margin-top: 15px;
+      font-size: 0.9rem;
+    }
+
+    .register-link a {
+      color: #155724;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+
+    .error {
+      background: rgba(255, 0, 0, 0.1);
+      padding: 8px;
+      color: #c0392b;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+
+    #clock {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.2);
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      z-index: 10;
+    }
+
+    .back-home-btn {
+      background: #2e7d32;
+      color: #fff;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.3s;
+      box-shadow: 0 2px 8px rgba(46,125,50,0.08);
+    }
+
+    .back-home-btn:hover {
+      background: #1b5e20;
+    }
+
+    @media (max-width: 500px) {
+      .login-container { margin: 30px 15px; padding: 25px; }
+      h2#typewriter { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="clock"></div>
+
+<div class="login-container">
+  <img src="Ayurveda Logo.jpg" alt="PrakritiCare Logo">
+  <h2 id="typewriter"></h2>
+
+  <form action="newlog.php" method="POST" autocomplete="on">
+    <input type="text" name="fakeuser" autocomplete="username" style="display: none;" />
+    <input type="email" name="email" placeholder="Enter your email" required autocomplete="username" />
+    <input type="password" name="password" placeholder="Enter your password" required autocomplete="current-password" />
+    <button type="submit">Login</button>
+  </form>
+
+  <div class="register-link">
+    <p>Don't have an account? <a href="Signup page.html">Sign Up</a></p>
+  </div>
+
+  <!-- Back to Home Button -->
+  <button class="back-home-btn" onclick="goHome()">← Back to Home</button>
+</div>
+
+<script>
+  const text = "Welcome Back to PrakritiCare";
+  let i = 0;
+  function typeWriter() {
+    if (i < text.length) {
+      document.getElementById("typewriter").innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typeWriter, 70);
+    }
+  }
+  typeWriter();
+
+  function updateClock() {
+    const now = new Date();
+    const time = now.toLocaleTimeString();
+    const date = now.toLocaleDateString();
+    document.getElementById("clock").innerText = `${date} ${time}`;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  function goHome() {
+    window.location.href = "Main Page.html";
+  }
+
+  document.querySelector("form").addEventListener("submit", function (e) {
+    const email = document.querySelector("input[name='email']");
+    const password = document.querySelector("input[name='password']");
+    const errorDiv = document.querySelector(".error") || document.createElement("div");
+
+    errorDiv.className = "error";
+    errorDiv.innerHTML = "";
+
+    let valid = true;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email.value)) {
+      errorDiv.innerHTML += "Please enter a valid email.<br>";
+      valid = false;
+    }
+
+    if (password.value.length < 6) {
+      errorDiv.innerHTML += "Password must be at least 6 characters long.";
+      valid = false;
+    }
+
+    if (!valid) {
+      e.preventDefault();
+      if (!document.querySelector(".error")) {
+        document.querySelector(".login-container").appendChild(errorDiv);
+      }
+    }
+  });
+
+  window.addEventListener('pageshow', function (event) {
+    if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
+      const email = document.querySelector("input[name='email']");
+      const password = document.querySelector("input[name='password']");
+      if (email) email.value = "";
+      if (password) password.value = "";
+
+      history.pushState(null, "", location.href);
+      window.onpopstate = function () {
+        history.go(1);
+      };
+    }
+  });
+</script>
+
+</body>
+</html>
